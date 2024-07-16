@@ -66,7 +66,7 @@ class VQVAE(nn.Module):
         f = self.quant_conv(self.encoder(inp_img_no_grad))
         return self.quantize.f_to_idxBl_or_fhat(f, to_fhat=False, v_patch_nums=v_patch_nums)
     
-    def idxBl_to_img(self, ms_idx_Bl: List[torch.Tensor], same_shape: bool, last_one=False) -> Union[List[torch.Tensor], torch.Tensor]:
+    def L(self, ms_idx_Bl: List[torch.Tensor], same_shape: bool, last_one=False) -> Union[List[torch.Tensor], torch.Tensor]:
         B = ms_idx_Bl[0].shape[0]
         ms_h_BChw = []
         for idx_Bl in ms_idx_Bl:
@@ -79,7 +79,11 @@ class VQVAE(nn.Module):
         if last_one:
             return self.decoder(self.post_quant_conv(self.quantize.embed_to_fhat(ms_h_BChw, all_to_max_scale=all_to_max_scale, last_one=True))).clamp_(-1, 1)
         else:
-            return [self.decoder(self.post_quant_conv(f_hat)).clamp_(-1, 1) for f_hat in self.quantize.embed_to_fhat(ms_h_BChw, all_to_max_scale=all_to_max_scale, last_one=False)]
+            return [
+                self.decoder(self.post_quant_conv(f_hat)).clamp_(-1, 1) 
+                for f_hat 
+                in self.quantize.embed_to_fhat(ms_h_BChw, all_to_max_scale=all_to_max_scale, last_one=False)
+            ]
     
     def img_to_reconstructed_img(self, x, v_patch_nums: Optional[Sequence[Union[int, Tuple[int, int]]]] = None, last_one=False) -> List[torch.Tensor]:
         f = self.quant_conv(self.encoder(x))
