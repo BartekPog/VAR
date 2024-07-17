@@ -1,5 +1,6 @@
 *.swp
 **/__pycache__/**
+__pycache__
 **/.ipynb_checkpoints/**
 .DS_Store
 .idea/*
@@ -19,4 +20,5 @@ local_output*
 *.txt
 # *.ipynb
 
-venv
+venv*
+.venv*
