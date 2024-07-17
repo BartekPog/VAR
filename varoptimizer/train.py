@@ -9,11 +9,11 @@ from functools import partial
 import torch
 from torch.utils.data import DataLoader
 
-import dist
-from utils import arg_util, misc
-from utils.data import build_dataset
-from utils.data_sampler import DistInfiniteBatchSampler, EvalDistributedSampler
-from utils.misc import auto_resume
+from varoptimizer import dist
+from .utils import arg_util, misc
+from .utils.data import build_dataset
+from .utils.data_sampler import DistInfiniteBatchSampler, EvalDistributedSampler
+from .utils.misc import auto_resume
 
 
 def build_everything(args: arg_util.Args):
@@ -77,7 +77,7 @@ def build_everything(args: arg_util.Args):
     
     # build models
     from torch.nn.parallel import DistributedDataParallel as DDP
-    from models import VAR, VQVAE, build_vae_var
+    from varoptimizer.models import VAR, VQVAE, build_vae_var
     from trainer import VARTrainer
     from utils.amp_sc import AmpOptimizer
     from utils.lr_control import filter_params
